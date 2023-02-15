@@ -15,6 +15,10 @@ var moves = {N: Vector2(0, -1),
 			 S: Vector2(0, 1),
 			 E: Vector2(1, 0),
 			 W: Vector2(-1, 0)}
+var keys = {N:"move_up",
+			S:"move_down",
+			E:"move_right",
+			W:"move_left"}
 
 var map : TileMap
 var map_pos = Vector2()
@@ -33,28 +37,26 @@ func can_move(dir):
 	
 
 func _input(event):
-	if Input.is_action_just_pressed('ui_up'):
-		move(N)
-	if Input.is_action_just_pressed('ui_down'):
-		move(S)
-	if Input.is_action_just_pressed('ui_right'):
-		move(E)
-	if Input.is_action_just_pressed('ui_left'):
-		move(W)
-	
+	check_recent_action()
+
+
+func check_recent_action():
+	for key in keys:
+		if Input.is_action_just_pressed(keys[key]):
+			move(key)
+
+
+func check_action():
+	for key in keys:
+		if Input.is_action_pressed(keys[key]):
+			move(key)
+			return true
+
 
 func move(dir = 0):
-	if dir and move_queue.size() < 2:
-		move_queue.append(dir)
-	if moving or not move_queue:
+	if moving or not can_move(dir):
 		return
-	if can_move(move_queue.front()):
-		map_pos += moves[move_queue.front()]
-	else:
-		move_queue.pop_front()
-		move()
-		return
-	move_queue.pop_front()
+	map_pos += moves[dir] * 2
 	moving = true
 	
 	var destination = map.map_to_world(map_pos) + Vector2(32, 32)
@@ -65,5 +67,5 @@ func move(dir = 0):
 
 func _on_Tween_tween_completed(object, key):
 	moving = false
-	move()
+	check_action()
 
