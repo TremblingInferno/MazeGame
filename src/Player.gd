@@ -39,7 +39,7 @@ func can_move(dir):
 		return true
 	
 
-func _input(event):
+func _input(_event):
 	check_recent_action()
 
 
@@ -73,3 +73,8 @@ func _on_Tween_tween_completed(object, key):
 	moving = false
 	check_action()
 
+
+
+func _on_Player_area_shape_entered(area_rid, area, area_shape_index, local_shape_index):
+	if area.is_in_group("Enemy"):
+		get_tree().reload_current_scene()

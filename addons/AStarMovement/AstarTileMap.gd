@@ -1,7 +1,6 @@
 extends TileMap
 class_name AstarTileMap
 
-
 const N = 1
 const E = 2
 const S = 4

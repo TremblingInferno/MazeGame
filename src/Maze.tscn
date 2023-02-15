@@ -1,16 +1,22 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://src/Maze.gd" type="Script" id=1]
 [ext_resource path="res://assets/road_tiles.tres" type="TileSet" id=2]
 [ext_resource path="res://src/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/EndPoint.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/AStarMovement/AstarTileMap.gd" type="Script" id=5]
-[ext_resource path="res://src/Enemy.tscn" type="PackedScene" id=6]
+[ext_resource path="res://src/Enemies.gd" type="Script" id=6]
+[ext_resource path="res://src/Enemy.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/EnemyStrategies/BlinkyMoveStrategy.gd" type="Script" id=8]
+[ext_resource path="res://assets/Characters/Minotaurs/Bully.png" type="Texture" id=9]
+[ext_resource path="res://assets/Characters/Minotaurs/Peter.png" type="Texture" id=10]
+[ext_resource path="res://assets/Characters/Minotaurs/Ascda.png" type="Texture" id=11]
+[ext_resource path="res://src/EnemyStrategies/SetpathMovementStrategy.gd" type="Script" id=12]
 
 [node name="Maze" type="Node2D"]
 script = ExtResource( 1 )
 EndGoal = NodePath("End")
-Enemy = ExtResource( 6 )
+Enemy = ExtResource( 7 )
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource( 2 )
@@ -30,5 +36,11 @@ zoom = Vector2( 2.69, 2.69 )
 
 [node name="Line2D" type="Line2D" parent="."]
 visible = false
+
+[node name="Enemies" type="Node" parent="."]
+script = ExtResource( 6 )
+Enemy = ExtResource( 7 )
+strategies = [ ExtResource( 8 ), ExtResource( 12 ) ]
+textures = [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ) ]
 
 [connection signal="finished" from="End" to="." method="_on_End_finished"]

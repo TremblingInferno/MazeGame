@@ -39,7 +39,7 @@ func _ready():
 	seed(map_seed)
 	print("Seed: ", map_seed)
 	tile_size = Map.cell_size
-	$Camera2D.offset = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) - Vector2(30,0)
+	$Camera2D.offset = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) - Vector2(32,0)
 	set_bounds(completed_rooms)
 	$Player.map = Map
 	$Player.position = Map.map_to_world(start_point) + Map.cell_size/2
@@ -54,7 +54,7 @@ func set_bounds(room_num):
 	
 	start_point = Vector2(west_bounds-2,height/2)
 	end_point = Vector2(east_bounds, height/2)
-	var camera_destination = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) - Vector2(30,0)
+	var camera_destination = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) - Vector2(32,0)
 	$Tween.interpolate_property($Camera2D, 'offset', 
 								$Camera2D.offset, camera_destination, 1,
 								Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
@@ -100,13 +100,12 @@ func make_maze():
 		if completed_rooms > 0:
 			if randi() % 2 == 0:
 				yield(get_tree().create_timer(0.01), "timeout")
-	set_end_point(end_point)
-	erase_walls()
-	
+	set_end_point()
+	yield(erase_walls(), "completed")
 	Map.update()
-	$Line2D.position = Map.cell_size/2
+	$Line2D.position = Map.cell_size/22
 	$Line2D.points = Map.get_astar_path(Map.map_to_world(start_point), Map.map_to_world(end_point))
-	spawn_enemies()
+	$Enemies.spawn_enemies()
 
 
 func create_line(cell, dist:Vector2):
@@ -133,7 +132,7 @@ func erase_walls():
 	# randomly remove a number of the map's walls
 	create_line(Vector2(west_bounds, 0), Vector2(0, height - 2))
 	create_line(Vector2(east_bounds - 2, 0), Vector2(0, height - 2))
-	for i in range(int(width * height * erase_fraction)):
+	for _i in range(int(width * height * erase_fraction)):
 		var x = int(rand_range(west_bounds/2 + 2, east_bounds/2 - 2)) * 2
 		var y = int(rand_range(2, height/2 - 2)) * 2
 		var cell = Vector2(x, y)
@@ -144,9 +143,10 @@ func erase_walls():
 		if completed_rooms > 0:
 			if randi() % 2 == 0:
 				yield(get_tree().create_timer(0.01), "timeout")
+	yield(get_tree(), "idle_frame")
 
 
-func set_end_point(end_point):
+func set_end_point():
 	Map.set_cellv(end_point, 7)
 	create_line(end_point, Vector2(-2, 0))
 	EndGoal.position = Map.map_to_world(end_point) + Vector2(32,32)
@@ -154,22 +154,7 @@ func set_end_point(end_point):
 
 func _on_End_finished():
 	completed_rooms += 1
-	remove_enemies()
+	$Enemies.remove_enemies()
 	set_bounds(completed_rooms)
 	make_maze()
 
-
-func spawn_enemies():
-	var enemy = Enemy.instance()
-	enemy.map = Map
-	var pos = Vector2(east_bounds - 2, 0)
-	enemy.position = Map.map_to_world(pos) + Map.cell_size/2
-	enemy.map_pos = pos
-	$Player.connect("player_moved", enemy, "on_player_moved")
-	add_child(enemy)
-
-
-func remove_enemies():
-	for child in get_children():
-		if child.is_in_group("Enemy"):
-			child.queue_free()
