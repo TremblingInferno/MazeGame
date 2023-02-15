@@ -29,6 +29,9 @@ var erase_fraction = 0.1
 # get a reference to the map for convenience
 onready var Map = $TileMap
 
+export(PackedScene) var Enemy
+
+
 func _ready():
 	randomize()
 	if !map_seed:
@@ -39,7 +42,7 @@ func _ready():
 	$Camera2D.offset = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) - Vector2(30,0)
 	set_bounds(completed_rooms)
 	$Player.map = Map
-	$Player.position = Map.map_to_world(start_point) + Vector2(32,32)
+	$Player.position = Map.map_to_world(start_point) + Map.cell_size/2
 	$Player.map_pos = start_point
 	make_maze()
 
@@ -56,8 +59,6 @@ func set_bounds(room_num):
 								$Camera2D.offset, camera_destination, 1,
 								Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	$Tween.start()
-
-
 
 
 func check_neighbors(cell, unvisited):
@@ -101,6 +102,11 @@ func make_maze():
 				yield(get_tree().create_timer(0.01), "timeout")
 	set_end_point(end_point)
 	erase_walls()
+	
+	Map.update()
+	$Line2D.position = Map.cell_size/2
+	$Line2D.points = Map.get_astar_path(Map.map_to_world(start_point), Map.map_to_world(end_point))
+	spawn_enemies()
 
 
 func create_line(cell, dist:Vector2):
@@ -148,5 +154,22 @@ func set_end_point(end_point):
 
 func _on_End_finished():
 	completed_rooms += 1
+	remove_enemies()
 	set_bounds(completed_rooms)
 	make_maze()
+
+
+func spawn_enemies():
+	var enemy = Enemy.instance()
+	enemy.map = Map
+	var pos = Vector2(east_bounds - 2, 0)
+	enemy.position = Map.map_to_world(pos) + Map.cell_size/2
+	enemy.map_pos = pos
+	$Player.connect("player_moved", enemy, "on_player_moved")
+	add_child(enemy)
+
+
+func remove_enemies():
+	for child in get_children():
+		if child.is_in_group("Enemy"):
+			child.queue_free()

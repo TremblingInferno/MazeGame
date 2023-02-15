@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "TileMap",
+"class": "AstarTileMap",
+"language": "GDScript",
+"path": "res://addons/AStarMovement/AstarTileMap.gd"
+} ]
+_global_script_class_icons={
+"AstarTileMap": ""
+}
+
 [application]
 
 config/name="MazeGame"
@@ -16,7 +26,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray(  )
+enabled=PoolStringArray( "res://addons/EditorSwitcher/plugin.cfg" )
 
 [input]
 

@@ -1,6 +1,17 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/Enemy.gd" type="Script" id=1]
+[ext_resource path="res://src/BlinkyMoveStrategy.gd" type="Script" id=2]
+[ext_resource path="res://assets/Characters/Minotaurs/Bully.png" type="Texture" id=3]
 
-[node name="Enemy" type="Node2D"]
+[node name="Enemy" type="Node2D" groups=["Enemy"]]
 script = ExtResource( 1 )
+
+[node name="MoveStrategy" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.0490798, 0.0490798 )
+texture = ExtResource( 3 )
+
+[node name="Tween" type="Tween" parent="."]

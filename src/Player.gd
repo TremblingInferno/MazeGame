@@ -1,5 +1,8 @@
 extends Area2D
 
+signal player_moved(player)
+
+
 const N = 0x1
 const E = 0x2
 const S = 0x4
@@ -60,6 +63,7 @@ func move(dir = 0):
 	moving = true
 	
 	var destination = map.map_to_world(map_pos) + Vector2(32, 32)
+	emit_signal("player_moved", self)
 	$Tween.interpolate_property(self, 'position', position, destination, speed,
 								Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	$Tween.start()
