@@ -24,6 +24,10 @@ config/name="MazeGame"
 run/main_scene="res://src/Maze.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+SoundManager="*res://src/SoundManager.tscn"
+
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/EditorSwitcher/plugin.cfg" )

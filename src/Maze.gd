@@ -45,6 +45,8 @@ func _ready():
 	$Player.position = Map.map_to_world(start_point) + Map.cell_size/2
 	$Player.map_pos = start_point
 	make_maze()
+	SoundManager.play_music()
+
 
 
 func set_bounds(room_num):
@@ -98,7 +100,7 @@ func make_maze():
 		elif stack:
 			current = stack.pop_back()
 		if completed_rooms > 0:
-			if randi() % 2 == 0:
+			if randi() % 4 == 0:
 				yield(get_tree().create_timer(0.01), "timeout")
 	set_end_point()
 	yield(erase_walls(), "completed")
@@ -156,5 +158,6 @@ func _on_End_finished():
 	completed_rooms += 1
 	$Enemies.remove_enemies()
 	set_bounds(completed_rooms)
+	SoundManager.play_level_creation()
 	make_maze()
 

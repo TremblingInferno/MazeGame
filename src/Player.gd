@@ -79,4 +79,5 @@ func _on_Tween_tween_completed(object, key):
 
 func _on_Player_area_shape_entered(area_rid, area, area_shape_index, local_shape_index):
 	if area.is_in_group("Enemy"):
+		SoundManager.play_death_sound()
 		get_tree().reload_current_scene()
