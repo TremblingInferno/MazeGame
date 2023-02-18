@@ -11,10 +11,10 @@ func on_player_moved(player):
 	if path.size() < 2:
 		return
 	var next_map_pos = Map.world_to_map(path[1])
-	if get_parent().enemy_in_spot(next_map_pos):
-		return
+#	if get_parent().enemy_in_spot(next_map_pos):
+#		return
 	map_pos = next_map_pos 
-	var destination = Map.map_to_world(map_pos) + Map.cell_size/2
+	var destination = Map.map_to_world(map_pos)
 	$Tween.interpolate_property(self, 'position', position, destination, speed,
 								Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	$Tween.start()

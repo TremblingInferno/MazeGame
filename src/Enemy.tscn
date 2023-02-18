@@ -7,19 +7,21 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 28.0
 
-[node name="Enemy" type="Area2D" groups=["Enemy", "Units"]]
+[node name="Enemy" type="Area2D" groups=["Enemy", "Obstacles"]]
 script = ExtResource( 1 )
 
 [node name="MoveStrategy" type="Node" parent="."]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 32, 32 )
 scale = Vector2( 0.126789, 0.126789 )
 texture = ExtResource( 3 )
 
 [node name="Tween" type="Tween" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 32, 32 )
 shape = SubResource( 1 )
 
 [node name="Line2D" type="Line2D" parent="."]

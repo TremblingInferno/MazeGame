@@ -14,7 +14,7 @@ func spawn_enemies():
 					Vector2(Main.west_bounds + Main.width/2, Main.height - 2),
 					Vector2(Main.west_bounds + Main.width/2, 0),
 					]
-	for i in Main.completed_rooms + 4:
+	for i in Main.completed_rooms + 1:
 		var pos
 		if i >= positions.size():
 			pos = positions[randi()%positions.size()]
@@ -26,7 +26,7 @@ func spawn_enemies():
 		enemy.get_node("MoveStrategy").set_script(strategies[strategy_i])
 		enemy.get_node("Sprite").texture = textures[strategy_i]
 		enemy.Map = Map
-		enemy.position = Map.map_to_world(pos) + Map.cell_size/2
+		enemy.position = Map.map_to_world(pos)
 		enemy.map_pos = pos
 		Main.get_node("Player").connect("player_moved", enemy, "on_player_moved")
 		add_child(enemy)

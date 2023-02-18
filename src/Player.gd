@@ -27,7 +27,8 @@ var map : TileMap
 var map_pos = Vector2()
 var speed = .25
 var moving = false
-	
+var direction
+
 
 func can_move(dir):
 	if map.get_cellv(map_pos + moves[dir]) < 0:
@@ -59,7 +60,8 @@ func check_action():
 func move(dir = 0):
 	if moving or not can_move(dir):
 		return
-	map_pos += moves[dir] * 2
+	direction = moves[dir] * 2
+	map_pos += direction
 	moving = true
 	
 	var destination = map.map_to_world(map_pos) + Vector2(32, 32)
