@@ -1,9 +1,10 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/EndPoint.gd" type="Script" id=1]
-[ext_resource path="res://assets/star.png" type="Texture" id=2]
+[ext_resource path="res://assets/Star.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
+radius = 8.0
 
 [node name="End" type="Node2D" groups=["EndGoal"]]
 script = ExtResource( 1 )
@@ -14,7 +15,7 @@ script = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 0.131148, 0.131148 )
+scale = Vector2( 0.75, 0.75 )
 texture = ExtResource( 2 )
 
 [connection signal="area_shape_entered" from="Area2D" to="." method="_on_Area2D_area_shape_entered"]

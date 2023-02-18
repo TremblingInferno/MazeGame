@@ -11,9 +11,9 @@ const W = 8
 var cell_walls = {Vector2(0, -1): N, Vector2(1, 0): E, 
 				  Vector2(0, 1): S, Vector2(-1, 0): W}
 
-var tile_size = 64  # tile size (in pixels)
-var width = 40  # width of map (in tiles)
-var height = 24  # height of map (in tiles)
+var tile_size = 32  # tile size (in pixels)
+var width = 24  # width of map (in tiles)
+var height = 14  # height of map (in tiles)
 
 var west_bounds = 0
 var east_bounds = width
@@ -39,7 +39,7 @@ func _ready():
 	seed(map_seed)
 	print("Seed: ", map_seed)
 	tile_size = Map.cell_size
-	$Camera2D.offset = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) - Vector2(32,0)
+	$Camera2D.offset = Map.map_to_world(Vector2(east_bounds - width/2, height/2))
 	set_bounds(completed_rooms)
 	$Player.map = Map
 	$Player.position = Map.map_to_world(start_point) + Map.cell_size/2
@@ -50,13 +50,13 @@ func _ready():
 
 
 func set_bounds(room_num):
-	var dist = (width+2) * room_num
+	var dist = (width+1) * room_num
 	west_bounds = dist 
 	east_bounds = dist + width
 	
-	start_point = Vector2(west_bounds-2,height/2)
+	start_point = Vector2(west_bounds-1,height/2)
 	end_point = Vector2(east_bounds, height/2)
-	var camera_destination = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) - Vector2(32,0)
+	var camera_destination = Map.map_to_world(Vector2(east_bounds - width/2, height/2)) 
 	$Tween.interpolate_property($Camera2D, 'offset', 
 								$Camera2D.offset, camera_destination, 1,
 								Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
@@ -67,8 +67,8 @@ func check_neighbors(cell, unvisited):
 	# returns an array of cell's unvisited neighbors
 	var list = []
 	for n in cell_walls.keys():
-		if cell + n*2 in unvisited:
-			list.append(cell + n*2)
+		if cell + n in unvisited:
+			list.append(cell + n)
 	return list
 
 
@@ -77,11 +77,11 @@ func make_maze():
 	var stack = []
 	# fill the map with solid tiles
 	Map.clear()
-	for x in range(west_bounds - 2, east_bounds + 2):
-		for y in range(-2, height + 1):
+	for x in range(west_bounds - 1, east_bounds + 1):
+		for y in range(-1, height + 1):
 			Map.set_cellv(Vector2(x, y), N|E|S|W)
-	for x in range(west_bounds, east_bounds, 2):
-		for y in range(0, height, 2):
+	for x in range(west_bounds, east_bounds):
+		for y in range(0, height):
 			unvisited.append(Vector2(x, y))
 	var current = start_point
 
@@ -105,7 +105,7 @@ func make_maze():
 	set_end_point()
 	yield(erase_walls(), "completed")
 	Map.update()
-	$Line2D.position = Map.cell_size/22
+	$Line2D.position = Map.cell_size/2
 	$Line2D.points = Map.get_astar_path(Map.map_to_world(start_point), Map.map_to_world(end_point))
 	$Enemies.spawn_enemies()
 
@@ -139,7 +139,7 @@ func erase_walls():
 		var y = int(rand_range(2, height/2 - 2)) * 2
 		var cell = Vector2(x, y)
 		# pick random neighbor
-		var neighbor = cell_walls.keys()[randi() % cell_walls.size()] * 2
+		var neighbor = cell_walls.keys()[randi() % cell_walls.size()]
 		if Map.get_cellv(cell) & cell_walls[neighbor.normalized()]:
 			create_line(cell, neighbor)
 		if completed_rooms > 0:
@@ -151,7 +151,7 @@ func erase_walls():
 func set_end_point():
 	Map.set_cellv(end_point, 7)
 	create_line(end_point, Vector2(-2, 0))
-	EndGoal.position = Map.map_to_world(end_point) + Vector2(32,32)
+	EndGoal.position = Map.map_to_world(end_point) + Vector2(16,16)
 
 
 func _on_End_finished():

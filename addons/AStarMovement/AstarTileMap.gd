@@ -8,7 +8,7 @@ const W = 8
 var cell_walls = {Vector2(0, -1): N, Vector2(1, 0): E, 
 				  Vector2(0, 1): S, Vector2(-1, 0): W}
 
-const DIRECTIONS := [Vector2.RIGHT * 2, Vector2.UP* 2, Vector2.LEFT* 2, Vector2.DOWN* 2]
+const DIRECTIONS := [Vector2.RIGHT, Vector2.UP, Vector2.LEFT, Vector2.DOWN]
 const PAIRING_LIMIT = int(pow(2, 30))
 enum pairing_methods {
 	CANTOR_UNSIGNED,	# positive values only
@@ -245,8 +245,6 @@ func get_used_cell_global_positions() -> Array:
 	var cells = get_used_cells()
 	var path_cells = []
 	for cell in cells:
-		if int(cell.x) % 2 or int(cell.y)%2:
-			continue
 		path_cells.append(cell)
 	var cell_positions := []
 	for cell in path_cells:
@@ -276,6 +274,6 @@ func get_grid_distance(distance: Vector2) -> float:
 
 func walls_between(point, direction):
 	point = world_to_map(point)
-	if get_cellv(point) & cell_walls[direction/2]:
+	if get_cellv(point) & cell_walls[direction]:
 		return true
 	return false

@@ -2,19 +2,19 @@ extends Node
 
 export(PackedScene) var Enemy
 export(Array, Script) var strategies
-export(Array, Texture) var textures
+export(Array, SpriteFrames) var textures
 
 onready var Main = get_parent()
 
 
 func spawn_enemies():
 	var Map = Main.Map
-	var positions = [Vector2(Main.east_bounds - 2, 0), 
-					Vector2(Main.east_bounds - 2, Main.height - 2),
-					Vector2(Main.west_bounds + Main.width/2, Main.height - 2),
+	var positions = [Vector2(Main.east_bounds - 1, 0), 
+					Vector2(Main.east_bounds - 1, Main.height - 1),
+					Vector2(Main.west_bounds + Main.width/2, Main.height - 1),
 					Vector2(Main.west_bounds + Main.width/2, 0),
 					]
-	for i in Main.completed_rooms + 1:
+	for i in Main.completed_rooms + 3:
 		var pos
 		if i >= positions.size():
 			pos = positions[randi()%positions.size()]
@@ -24,9 +24,10 @@ func spawn_enemies():
 		
 		var strategy_i = i % strategies.size()
 		enemy.get_node("MoveStrategy").set_script(strategies[strategy_i])
-		enemy.get_node("Sprite").texture = textures[strategy_i]
+		enemy.get_node("Sprite").frames = textures[strategy_i]
+		enemy.get_node("Sprite").animation = "w"
 		enemy.Map = Map
-		enemy.position = Map.map_to_world(pos)
+		enemy.position = Map.map_to_world(pos) + Map.cell_size / 2 
 		enemy.map_pos = pos
 		Main.get_node("Player").connect("player_moved", enemy, "on_player_moved")
 		add_child(enemy)

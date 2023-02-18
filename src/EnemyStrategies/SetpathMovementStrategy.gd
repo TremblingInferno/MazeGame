@@ -10,8 +10,8 @@ func _ready():
 	var Main = get_parent().get_parent().Main
 	original_pos = get_parent().map_pos
 	mirrored_corner = Vector2(Main.west_bounds + 
-								(Main.east_bounds - original_pos.x) - 2,
-								(Main.height - original_pos.y) - 2)
+								(Main.east_bounds - original_pos.x) - 1,
+								(Main.height - original_pos.y) - 1)
 
 
 func get_destination(player:Area2D, map:TileMap): # shared by all enemy move strategies

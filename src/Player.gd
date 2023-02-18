@@ -60,12 +60,14 @@ func check_action():
 func move(dir = 0):
 	if moving or not can_move(dir):
 		return
-	direction = moves[dir] * 2
+	direction = moves[dir]
 	map_pos += direction
 	moving = true
 	
-	var destination = map.map_to_world(map_pos) + Vector2(32, 32)
+	var destination = map.map_to_world(map_pos) + map.cell_size/2
 	emit_signal("player_moved", self)
+	$Sprite.animation = animations[dir]
+	$Sprite.playing = true
 	$Tween.interpolate_property(self, 'position', position, destination, speed,
 								Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	$Tween.start()
@@ -74,6 +76,7 @@ func move(dir = 0):
 func _on_Tween_tween_completed(object, key):
 	moving = false
 	check_action()
+	$Sprite.playing = false
 
 
 
