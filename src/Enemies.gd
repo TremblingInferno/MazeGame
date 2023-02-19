@@ -14,7 +14,7 @@ func spawn_enemies():
 					Vector2(Main.west_bounds + Main.width/2, Main.height - 1),
 					Vector2(Main.west_bounds + Main.width/2, 0),
 					]
-	for i in Main.completed_rooms + 3:
+	for i in Main.completed_rooms + 1:
 		var pos
 		if i >= positions.size():
 			pos = positions[randi()%positions.size()]

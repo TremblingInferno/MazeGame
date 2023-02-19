@@ -12,8 +12,8 @@ var cell_walls = {Vector2(0, -1): N, Vector2(1, 0): E,
 				  Vector2(0, 1): S, Vector2(-1, 0): W}
 
 var tile_size = 32  # tile size (in pixels)
-var width = 24  # width of map (in tiles)
-var height = 14  # height of map (in tiles)
+var width = 28  # width of map (in tiles)
+var height = 18  # height of map (in tiles)
 
 var west_bounds = 0
 var east_bounds = width
@@ -100,7 +100,7 @@ func make_maze():
 		elif stack:
 			current = stack.pop_back()
 		if completed_rooms > 0:
-			if randi() % 4 == 0:
+			if randi() % 12 == 0:
 				yield(get_tree().create_timer(0.01), "timeout")
 	set_end_point()
 	yield(erase_walls(), "completed")
